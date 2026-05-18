@@ -11,11 +11,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Databas
+builder.WebHost.UseUrls("http://0.0.0.0:8080");
+
 builder.Services.AddDbContext<AppDbContext>(opt =>
 	opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// JWT
+
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	.AddJwtBearer(opt =>
