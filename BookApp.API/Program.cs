@@ -16,7 +16,6 @@ builder.WebHost.UseUrls("http://0.0.0.0:8080");
 builder.Services.AddDbContext<AppDbContext>(opt =>
 	opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	.AddJwtBearer(opt =>
@@ -33,28 +32,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 		};
 	});
 
-
 builder.Services.AddCors(opt =>
 {
 	opt.AddPolicy("AllowAngular", policy =>
-		policy.WithOrigins("http://localhost:4200")
-			  .AllowAnyHeader()
-			  .AllowAnyMethod());
+		policy.WithOrigins(
+			"http://localhost:4200",
+			"https://bookapp-frontend-h4h9.vercel.app"
+		)
+		.AllowAnyHeader()
+		.AllowAnyMethod());
 });
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-	app.UseSwagger();
-	app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseCors("AllowAngular");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
 
 using (var scope = app.Services.CreateScope())
 {
